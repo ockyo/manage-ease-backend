@@ -15,6 +15,7 @@ class UserService {
         if (existingUser) {
             throw new Error('Email already exists');
         }
+        return await UserRepository.createUser(data);
     }
     async updateUser(id, data) {
         return await UserRepository.updateUser(id, data);
