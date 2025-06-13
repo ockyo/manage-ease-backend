@@ -17,6 +17,25 @@ const authController = {
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
+    },
+
+    async forgotPassword(req, res) {
+        try {
+            const { email } = req.body;
+            const result = await authService.forgotPassword(email);
+            res.json(result);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    },
+    async resetPassword(req, res) {
+        try {
+            const { token, password } = req.body;
+            const result = await authService.resetPassword(token, password);
+            res.json(result);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
     }
 }
 module.exports = authController;
