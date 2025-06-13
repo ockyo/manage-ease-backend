@@ -21,16 +21,26 @@ const authService = {
         return token;
     },
     async register(data) {
+        // Kiểm tra username đã tồn tại
         const existingUser = await userRepository.getUserByUsername(data.username);
-        if (existingUser) {
-            throw new Error('User already exists');
-        }
+        if (existingUser) throw new Error('Username đã tồn tại!');
+
+        // Kiểm tra email đã tồn tại
+        const existingEmail = await userRepository.getUserByEmail(data.email);
+        if (existingEmail) throw new Error('Email đã tồn tại!');
+
+        // Hash password
         const hashedPassword = await bcrypt.hash(data.password, 10);
+
+        // Tạo user mới
         const user = await userRepository.createUser({
             ...data,
             password: hashedPassword
         });
-        return user;
+
+        // Không trả password về cho FE
+        const { password, ...userInfo } = user.toObject();
+        return userInfo;
     },
 
     async forgotPassword(email) {
